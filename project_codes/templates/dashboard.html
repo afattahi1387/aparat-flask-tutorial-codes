@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>داشبورد</title>
+        <!-- <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" /> -->
+        <link href="{{ url_for('static', filename = 'styles2.css') }}" rel="stylesheet" />
+        <!-- <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script> -->
+    </head>
+    <body class="sb-nav-fixed">
+        {% include('panel_top_menu.html') %}
+        <div id="layoutSidenav">
+            {% include('panel_sidebar.html') %}
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">داشبورد</h1><br>
+                        {% include 'show_flashed_messages.html' %}
+                        <div class="row"> <!-- TODO -->
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card bg-primary text-white mb-4">
+                                    <div class="card-body">Primary Card</div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <a class="small text-white stretched-link" href="#">View Details</a>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card bg-warning text-white mb-4">
+                                    <div class="card-body">Warning Card</div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <a class="small text-white stretched-link" href="#">View Details</a>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card bg-success text-white mb-4">
+                                    <div class="card-body">Success Card</div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <a class="small text-white stretched-link" href="#">View Details</a>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card bg-danger text-white mb-4">
+                                    <div class="card-body">Danger Card</div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <a class="small text-white stretched-link" href="#">View Details</a>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-edit"></i>
+                                        ویرایش دسته بندی
+                                    </div>
+                                    <div class="card-body" style="direction: rtl;">
+                                        {% if show_form == 'edit_category' %}
+                                            <form action="/update-category/{{ request.args.get('edit-category') }}" method="POST">
+                                                <input type="text" name="name" placeholder="ویرایش دسته بندی" value="{{ name_input_value }}" class="form-control" required><br>
+                                                <!-- <button type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button> --><!-- TODO: action it. -->
+                                                <input type="submit" value="ویرایش" class="btn btn-warning" style="color: white;">
+                                            </form>
+                                        {% else %}
+                                            <span class="text-danger">صفحه در حالت عادی قرار دارد. برای ویرایش روی دکمه های ویرایش در کادر سمت راست کلیک کنید.</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-plus"></i>
+                                        افزودن دسته بندی
+                                    </div>
+                                    <div class="card-body" style="direction: rtl;">
+                                        {% if show_form == 'add_category' %}
+                                            <form action="/insert-category" method="POST">
+                                                <input type="text" name="name" placeholder="افزودن دسته بندی" class="form-control" required><br>
+                                                <!-- <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i></button> --><!-- TODO: action it. -->
+                                                <input type="submit" value="افزودن" class="btn btn-success">
+                                            </form>
+                                        {% else %}
+                                            <span class="text-danger">صفحه در حالت ویرایش دسته بندی قرار دارد.</span><br>
+                                        {% endif %}
+                                        {% if categories %}
+                                            <br>
+                                            <ul>
+                                                {% for category in categories %}
+                                                    <li>{{ category[1] }} | <a href="/dashboard?edit-category={{ category[0] }}" class="text-warning" style="text-decoration: none;">ویرایش</a> | <span class="text-danger" style="cursor: pointer;" onclick="if(confirm('آیا از حذف این دسته بندی مطمئن هستید؟')){window.location.href='/delete-category/{{ category[0] }}';}">حذف</span></li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                مقالات
+                            </div>
+                            <div class="card-body">
+                                {% if not all_articles %}
+                                    <div style="direction: rtl;">مقاله ای یافت نشد!</div>
+                                {% else %}
+                                    <table id="datatablesSimple">
+                                        <thead>
+                                            <tr>
+                                                <th>ردیف</th>
+                                                <th>نام</th>
+                                                <th>تصویر</th>
+                                                <th>دسته بندی</th>
+                                                <th>تاریخ ایجاد</th>
+                                                <th>عملیات</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for id in all_articles %}
+                                                <tr>
+                                                    <td>{{ id }}</td>
+                                                    <td>{{ all_articles[id][1] }}</td>
+                                                    <td>{{ all_articles[id][2] }}</td> <!-- TODO: Show article image here -->
+                                                    <td>{{ all_articles[id][4] }}</td>
+                                                    <td>{{ all_articles[id][5] }}</td>
+                                                    <td>
+                                                        <a href="/edit-article/{{ all_articles[id][0] }}" class="btn btn-warning" style="color: white;">ویرایش</a>
+                                                        <button class="btn btn-danger" cursor="pointer" onclick="if(confirm('آیا از انتقال این مقاله به سطل زباله مطمئن هستید؟')){window.location.href='/send-article-to-trash/{{ all_articles[id][0] }}';}">انتقال به سطل زباله</button>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script> -->
+        <script src="{{ url_for('static', filename = 'datatables-simple-demo.js') }}"></script>
+    </body>
+</html>
