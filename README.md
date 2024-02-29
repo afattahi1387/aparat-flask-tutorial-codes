@@ -12,3 +12,6 @@ This project is for share codes that writed in flask tutorial that uploaded into
 - [ ] Add fontawesome icons to project.
 - [ ] Say about hash.
 - [ ] Add category "سایر موارد".
+
+[GitHub Link](https://github.com/afattahi1387/aparat-flask-tutorial-codes/)
+For view project comments, you can go to gitlab and view this project in this link: [GitLab Link](https://gitlab.com/flask-projects1/aparat_flask_tutorial_codes)
